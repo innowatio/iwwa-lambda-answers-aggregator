@@ -23,6 +23,141 @@ describe("`answers aggregator`", () => {
 
     describe("type survey", () => {
 
+        it("INSERT a new answer", async () => {
+
+            const event = getEventFromObject({
+                data: {
+                    element: {
+                        answers: [
+                            {
+                                id: 2,
+                                timestamp: "2016-08-09T14:30:32.543Z",
+                                answer: "Vendita all'ingrosso o al dettaglio (negozi, ecc)",
+                                question: {
+                                    text: "In quale categoria opera la tua società?"
+                                }
+                            }
+                        ],
+                        userId: "512cd39b-ae0e-a324-4e8e-04fde2a8bedf",
+                        siteId: "32",
+                        questionId: "8f6d2f9d-a3cb-4595-8c3c-73efc7c2a6cf",
+                        category: "inizio-pilot",
+                        type: "survey",
+                        visitId: "512cd39b-ae0e-a324-4e8e-04fde2a8bedf-2016-08-09T14:30:16.526Z"
+                    },
+                    id: "1f6d2a9d-a3cb-4595-8c3c-73efc7c2a6cd"
+                },
+                type: "element inserted in collection answers"
+            });
+
+            const expected = [{
+                _id: "survey-inizio-pilot-512cd39b-ae0e-a324-4e8e-04fde2a8bedf",
+                answers: [
+                    {
+                        id: 2,
+                        timestamp: "2016-08-09T14:30:32.543Z",
+                        answer: "Vendita all'ingrosso o al dettaglio (negozi, ecc)",
+                        question: {
+                            text: "In quale categoria opera la tua società?"
+                        }
+                    }
+                ],
+                userId: "512cd39b-ae0e-a324-4e8e-04fde2a8bedf",
+                siteId: "32",
+                questionId: "8f6d2f9d-a3cb-4595-8c3c-73efc7c2a6cf",
+                category: "inizio-pilot",
+                type: "survey",
+                visitId: "512cd39b-ae0e-a324-4e8e-04fde2a8bedf-2016-08-09T14:30:16.526Z"
+            }];
+
+            await run(handler, event);
+
+            const answersOnDB = await find({_id: "survey-inizio-pilot-512cd39b-ae0e-a324-4e8e-04fde2a8bedf"});
+
+            expect(answersOnDB).to.deep.equal(expected);
+        });
+
+        it("UPDATE an existing answer", async () => {
+
+            const eventOnDB = {
+                answers: [
+                    {
+                        id: 2,
+                        timestamp: "2016-08-09T14:30:32.543Z",
+                        answer: "Vendita all'ingrosso o al dettaglio (negozi, ecc)",
+                        question: {
+                            text: "In quale categoria opera la tua società?"
+                        }
+                    }
+                ],
+                userId: "512cd39b-ae0e-a324-4e8e-04fde2a8aaaa",
+                siteId: "32",
+                questionId: "8f6d2f9d-a3cb-4595-8c3c-73efc7c2a6cf",
+                category: "inizio-pilot",
+                type: "survey",
+                visitId: "512cd39b-ae0e-a324-4e8e-04fde2a8bedf-2016-08-09T14:30:16.526Z"
+            };
+
+            await upsert("survey-inizio-pilot-512cd39b-ae0e-a324-4e8e-04fde2a8aaaa", eventOnDB);
+
+            const event = getEventFromObject({
+                data: {
+                    element: {
+                        answers: [
+                            {
+                                id: 2,
+                                timestamp: "2016-08-10T00:00:00.000Z",
+                                answer: "Artigianato",
+                                question: {
+                                    text: "In quale categoria opera la tua società?"
+                                }
+                            }
+                        ],
+                        userId: "512cd39b-ae0e-a324-4e8e-04fde2a8aaaa",
+                        siteId: "32",
+                        questionId: "8f6d2f9d-a3cb-4595-8c3c-73efc7c2a6cf",
+                        category: "inizio-pilot",
+                        type: "survey",
+                        visitId: "512cd39b-ae0e-a324-4e8e-04fde2a8aaaa-2016-08-10T00:00:00.000Z"
+                    },
+                    id: "1f6d2a9d-a3cb-4595-8c3c-73efc7c2a6cd"
+                },
+                type: "element inserted in collection answers"
+            });
+
+            const expected = [{
+                _id: "survey-inizio-pilot-512cd39b-ae0e-a324-4e8e-04fde2a8aaaa",
+                answers: [
+                    {
+                        id: 2,
+                        timestamp: "2016-08-10T00:00:00.000Z",
+                        answer: "Artigianato",
+                        question: {
+                            text: "In quale categoria opera la tua società?"
+                        }
+                    }, {
+                        id: 2,
+                        timestamp: "2016-08-09T14:30:32.543Z",
+                        answer: "Vendita all'ingrosso o al dettaglio (negozi, ecc)",
+                        question: {
+                            text: "In quale categoria opera la tua società?"
+                        }
+                    }
+                ],
+                userId: "512cd39b-ae0e-a324-4e8e-04fde2a8aaaa",
+                siteId: "32",
+                questionId: "8f6d2f9d-a3cb-4595-8c3c-73efc7c2a6cf",
+                category: "inizio-pilot",
+                type: "survey",
+                visitId: "512cd39b-ae0e-a324-4e8e-04fde2a8aaaa-2016-08-10T00:00:00.000Z"
+            }];
+
+            await run(handler, event);
+
+            const answersOnDB = await find({_id: "survey-inizio-pilot-512cd39b-ae0e-a324-4e8e-04fde2a8aaaa"});
+
+            expect(answersOnDB).to.deep.equal(expected);
+        });
 
     });
 
@@ -33,22 +168,22 @@ describe("`answers aggregator`", () => {
             const event = getEventFromObject({
                 data: {
                     element: {
-                        "answers": [
+                        answers: [
                             {
-                                "id": 2,
-                                "timestamp": "2016-08-09T14:30:32.543Z",
-                                "answer": "Vendita all'ingrosso o al dettaglio (negozi, ecc)",
-                                "question": {
-                                    "text": "In quale categoria opera la tua società?"
+                                id: 2,
+                                timestamp: "2016-08-09T14:30:32.543Z",
+                                answer: "Vendita all'ingrosso o al dettaglio (negozi, ecc)",
+                                question: {
+                                    text: "In quale categoria opera la tua società?"
                                 }
                             }
                         ],
-                        "userId": "512cd39b-ae0e-a324-4e8e-04fde2a8bedf",
-                        "siteId": "32",
-                        "questionId": "8f6d2f9d-a3cb-4595-8c3c-73efc7c2a6cf",
-                        "category": "demographics",
-                        "type": "questionnaire",
-                        "visitId": "512cd39b-ae0e-a324-4e8e-04fde2a8bedf-2016-08-09T14:30:16.526Z"
+                        userId: "512cd39b-ae0e-a324-4e8e-04fde2a8bedf",
+                        siteId: "32",
+                        questionId: "8f6d2f9d-a3cb-4595-8c3c-73efc7c2a6cf",
+                        category: "demographics",
+                        type: "questionnaire",
+                        visitId: "512cd39b-ae0e-a324-4e8e-04fde2a8bedf-2016-08-09T14:30:16.526Z"
                     },
                     id: "1f6d2a9d-a3cb-4595-8c3c-73efc7c2a6cd"
                 },
@@ -57,22 +192,22 @@ describe("`answers aggregator`", () => {
 
             const expected = [{
                 _id: "questionnaire-demographics-32",
-                "answers": [
+                answers: [
                     {
-                        "id": 2,
-                        "timestamp": "2016-08-09T14:30:32.543Z",
-                        "answer": "Vendita all'ingrosso o al dettaglio (negozi, ecc)",
-                        "question": {
-                            "text": "In quale categoria opera la tua società?"
+                        id: 2,
+                        timestamp: "2016-08-09T14:30:32.543Z",
+                        answer: "Vendita all'ingrosso o al dettaglio (negozi, ecc)",
+                        question: {
+                            text: "In quale categoria opera la tua società?"
                         }
                     }
                 ],
-                "userId": "512cd39b-ae0e-a324-4e8e-04fde2a8bedf",
-                "siteId": "32",
-                "questionId": "8f6d2f9d-a3cb-4595-8c3c-73efc7c2a6cf",
-                "category": "demographics",
-                "type": "questionnaire",
-                "visitId": "512cd39b-ae0e-a324-4e8e-04fde2a8bedf-2016-08-09T14:30:16.526Z"
+                userId: "512cd39b-ae0e-a324-4e8e-04fde2a8bedf",
+                siteId: "32",
+                questionId: "8f6d2f9d-a3cb-4595-8c3c-73efc7c2a6cf",
+                category: "demographics",
+                type: "questionnaire",
+                visitId: "512cd39b-ae0e-a324-4e8e-04fde2a8bedf-2016-08-09T14:30:16.526Z"
             }];
 
             await run(handler, event);
@@ -85,22 +220,22 @@ describe("`answers aggregator`", () => {
         it("UPDATE an existing answer", async () => {
 
             const eventOnDB = {
-                "answers": [
+                answers: [
                     {
-                        "id": 2,
-                        "timestamp": "2016-08-09T14:30:32.543Z",
-                        "answer": "Vendita all'ingrosso o al dettaglio (negozi, ecc)",
-                        "question": {
-                            "text": "In quale categoria opera la tua società?"
+                        id: 2,
+                        timestamp: "2016-08-09T14:30:32.543Z",
+                        answer: "Vendita all'ingrosso o al dettaglio (negozi, ecc)",
+                        question: {
+                            text: "In quale categoria opera la tua società?"
                         }
                     }
                 ],
-                "userId": "512cd39b-ae0e-a324-4e8e-04fde2a8bedf",
-                "siteId": "32",
-                "questionId": "8f6d2f9d-a3cb-4595-8c3c-73efc7c2a6cf",
-                "category": "demographics",
-                "type": "questionnaire",
-                "visitId": "512cd39b-ae0e-a324-4e8e-04fde2a8bedf-2016-08-09T14:30:16.526Z"
+                userId: "512cd39b-ae0e-a324-4e8e-04fde2a8bedf",
+                siteId: "32",
+                questionId: "8f6d2f9d-a3cb-4595-8c3c-73efc7c2a6cf",
+                category: "demographics",
+                type: "questionnaire",
+                visitId: "512cd39b-ae0e-a324-4e8e-04fde2a8bedf-2016-08-09T14:30:16.526Z"
             };
 
             await upsert("questionnaire-demographics-32", eventOnDB);
@@ -108,22 +243,22 @@ describe("`answers aggregator`", () => {
             const event = getEventFromObject({
                 data: {
                     element: {
-                        "answers": [
+                        answers: [
                             {
-                                "id": 2,
-                                "timestamp": "2016-08-10T00:00:00.000Z",
-                                "answer": "Artigianato",
-                                "question": {
-                                    "text": "In quale categoria opera la tua società?"
+                                id: 2,
+                                timestamp: "2016-08-10T00:00:00.000Z",
+                                answer: "Artigianato",
+                                question: {
+                                    text: "In quale categoria opera la tua società?"
                                 }
                             }
                         ],
-                        "userId": "512cd39b-ae0e-a324-4e8e-04fde2a8aaaa",
-                        "siteId": "32",
-                        "questionId": "8f6d2f9d-a3cb-4595-8c3c-73efc7c2a6cf",
-                        "category": "demographics",
-                        "type": "questionnaire",
-                        "visitId": "512cd39b-ae0e-a324-4e8e-04fde2a8aaaa-2016-08-10T00:00:00.000Z"
+                        userId: "512cd39b-ae0e-a324-4e8e-04fde2a8aaaa",
+                        siteId: "32",
+                        questionId: "8f6d2f9d-a3cb-4595-8c3c-73efc7c2a6cf",
+                        category: "demographics",
+                        type: "questionnaire",
+                        visitId: "512cd39b-ae0e-a324-4e8e-04fde2a8aaaa-2016-08-10T00:00:00.000Z"
                     },
                     id: "1f6d2a9d-a3cb-4595-8c3c-73efc7c2a6cd"
                 },
@@ -132,29 +267,29 @@ describe("`answers aggregator`", () => {
 
             const expected = [{
                 _id: "questionnaire-demographics-32",
-                "answers": [
+                answers: [
                     {
-                        "id": 2,
-                        "timestamp": "2016-08-10T00:00:00.000Z",
-                        "answer": "Artigianato",
-                        "question": {
-                            "text": "In quale categoria opera la tua società?"
+                        id: 2,
+                        timestamp: "2016-08-10T00:00:00.000Z",
+                        answer: "Artigianato",
+                        question: {
+                            text: "In quale categoria opera la tua società?"
                         }
                     }, {
-                        "id": 2,
-                        "timestamp": "2016-08-09T14:30:32.543Z",
-                        "answer": "Vendita all'ingrosso o al dettaglio (negozi, ecc)",
-                        "question": {
-                            "text": "In quale categoria opera la tua società?"
+                        id: 2,
+                        timestamp: "2016-08-09T14:30:32.543Z",
+                        answer: "Vendita all'ingrosso o al dettaglio (negozi, ecc)",
+                        question: {
+                            text: "In quale categoria opera la tua società?"
                         }
                     }
                 ],
-                "userId": "512cd39b-ae0e-a324-4e8e-04fde2a8aaaa",
-                "siteId": "32",
-                "questionId": "8f6d2f9d-a3cb-4595-8c3c-73efc7c2a6cf",
-                "category": "demographics",
-                "type": "questionnaire",
-                "visitId": "512cd39b-ae0e-a324-4e8e-04fde2a8aaaa-2016-08-10T00:00:00.000Z"
+                userId: "512cd39b-ae0e-a324-4e8e-04fde2a8aaaa",
+                siteId: "32",
+                questionId: "8f6d2f9d-a3cb-4595-8c3c-73efc7c2a6cf",
+                category: "demographics",
+                type: "questionnaire",
+                visitId: "512cd39b-ae0e-a324-4e8e-04fde2a8aaaa-2016-08-10T00:00:00.000Z"
             }];
 
             await run(handler, event);
@@ -164,6 +299,4 @@ describe("`answers aggregator`", () => {
             expect(answersOnDB).to.deep.equal(expected);
         });
     });
-
-
 });
