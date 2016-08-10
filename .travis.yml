@@ -4,7 +4,7 @@ node_js:
   - "5"
 
 services:
- - your services (e.g. mongodb)
+ - mongodb
 
 env:
   - MONGODB_URL=mongodb://localhost:27017/test
