@@ -1,6 +1,6 @@
 import {MongoClient} from "mongodb";
 
-import {COLLECTION_NAME, MONGODB_URL, KEEP_ALIVE, SOCKET_CONNECT_TIMEOUT_MS, SERVER_CONNECT_TIMEOUT_MS, SERVER_POOL_SIZE, SERVER_AUTO_RECONNECT} from "../config";
+import {COLLECTION_NAME, MONGODB_URL, KEEP_ALIVE, SOCKET_CONNECT_TIMEOUT_MS} from "../config";
 
 export const mongodb = MongoClient.connect(MONGODB_URL, {
     replSet: {
@@ -9,13 +9,13 @@ export const mongodb = MongoClient.connect(MONGODB_URL, {
             connectTimeoutMS: SOCKET_CONNECT_TIMEOUT_MS
         }
     },
-    server: {
+/*    server: {
         auto_reconnect: SERVER_AUTO_RECONNECT,
         poolSize : SERVER_POOL_SIZE,
         socketOptions: {
             connectTimeoutMS: SERVER_CONNECT_TIMEOUT_MS
         }
-    }
+    } */
 });
 
 

@@ -6,8 +6,10 @@ export const MONGODB_URL = process.env.MONGODB_URL || "mongodb://lambda-aggregat
 export const KEEP_ALIVE = process.env.KEEP_ALIVE || 1;
 export const SOCKET_CONNECT_TIMEOUT_MS = process.env.SOCKET_CONNECT_TIMEOUT_MS || 30000;
 
+/*
 export const SERVER_CONNECT_TIMEOUT_MS = process.env.SERVER_CONNECT_TIMEOUT_MS || 500;
-export const SERVER_AUTO_RECONNECT = process.env.SERVER_AUTO_RECONNECT || false;
-export const SERVER_POOL_SIZE = process.env.SERVER_POOL_SIZE || 40;
+export const SERVER_AUTO_RECONNECT = process.env.SERVER_AUTO_RECONNECT || true;
+export const SERVER_POOL_SIZE = process.env.SERVER_POOL_SIZE || 5;
+*/
 
 export const COLLECTION_NAME = "answers";
