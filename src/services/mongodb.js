@@ -1,9 +1,9 @@
 import {MongoClient} from "mongodb";
 
-import {COLLECTION_NAME, MONGODB_URL} from "../config";
+import {COLLECTION_NAME, MONGODB_URL, KEEP_ALIVE, CONNECT_TIMEOUT_MS} from "../config";
 
 export const mongodb = MongoClient.connect(MONGODB_URL, {
-    replSet: {socketOptions: {keepAlive: 1, connectTimeoutMS: 30000}}
+    replSet: {socketOptions: {keepAlive: KEEP_ALIVE, connectTimeoutMS: CONNECT_TIMEOUT_MS}}
 });
 
 export async function upsert (id, answers) {
