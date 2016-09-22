@@ -1,13 +1,13 @@
+import log from "services/logger";
 import {find, upsert} from "services/mongodb";
-
 
 export async function saveAnswers (id, answers) {
 
-    // Cerca nel MONGO
+    // Seatch in MONGO
     const answersOnDB = await find({_id: id});
     var answersToSave = answers;
 
-    // se trova, aggiunge le nuove answers
+    // if found it, add the new answers
     if (answersOnDB.length > 0) {
         answersToSave.answers = [
             ...answersToSave.answers,
@@ -15,6 +15,7 @@ export async function saveAnswers (id, answers) {
         ];
     }
 
-    // altrimenti salva e basta
+    log.info(answersToSave);
+    // else save
     await upsert(id, answersToSave);
 }

@@ -1,8 +1,9 @@
+import log from "services/logger";
 import {generateQuestionnaireId, generateSurveyId} from "utils";
 import {saveAnswers} from "steps/save-answers";
 
 export default async function pipeline (event) {
-
+    log.info(event);
     const answers = event.data.element;
     const answersType = answers.type;
 
@@ -10,7 +11,7 @@ export default async function pipeline (event) {
 
     switch (answersType) {
     case "questionnaire":
-        // id questionario
+        // id questionnaire
         id = generateQuestionnaireId(answers);
         break;
     case "survey":
@@ -21,7 +22,7 @@ export default async function pipeline (event) {
         id = event.data.id;
     }
 
-    // inserisci in mongo
+    // insert to mongo
     await saveAnswers(id, answers);
 
     return null;
