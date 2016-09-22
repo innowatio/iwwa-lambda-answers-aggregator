@@ -2,7 +2,7 @@ import {expect} from "chai";
 
 import {getEventFromObject, run} from "./mocks";
 import {handler} from "index";
-import {find, upsert, mongodb} from "services/mongodb";
+import {find, upsert, getMongoClient} from "services/mongodb";
 import {COLLECTION_NAME} from "config";
 
 describe("Answers aggregator", () => {
@@ -10,7 +10,7 @@ describe("Answers aggregator", () => {
     var db;
 
     before(async () => {
-        db = await mongodb;
+        db = await getMongoClient();
     });
 
     after(async () => {
